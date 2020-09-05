@@ -1,5 +1,5 @@
 {
-    "name": ":vendor_name/:package_name",
+    "name": "jccr/rating",
     "description": ":package_description",
     "keywords": [
         ":vendor_name",
