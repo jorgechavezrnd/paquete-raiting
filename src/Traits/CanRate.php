@@ -2,10 +2,10 @@
 
 namespace Laraveles\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Laraveles\Events\ModelRated;
 use Laraveles\Events\ModelUnrated;
 use Laraveles\Exceptions\InvalidScore;
-use Illuminate\Database\Eloquent\Model;
 
 trait CanRate
 {
@@ -33,8 +33,7 @@ trait CanRate
 
     public function rate(Model $model, float $score): bool
     {
-        if ($this->hasRated($model))
-        {
+        if ($this->hasRated($model)) {
             return false;
         }
 
@@ -47,7 +46,7 @@ trait CanRate
 
         $this->ratings($model)->attach($model->getKey(), [
             'score' => $score,
-            'rateable_type' => get_class($model)
+            'rateable_type' => get_class($model),
         ]);
 
         event(new ModelRated($this, $model, $score));
@@ -57,8 +56,7 @@ trait CanRate
 
     public function unrate(Model $model): bool
     {
-        if (! $this->hasRated($model))
-        {
+        if (! $this->hasRated($model)) {
             return false;
         }
 

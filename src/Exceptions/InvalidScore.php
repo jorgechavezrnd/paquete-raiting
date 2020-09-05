@@ -20,8 +20,8 @@ class InvalidScore extends Exception
         return response()->json([
             'score' => trans('rating.invalidScore', [
                 'from' => $this->from,
-                'to' => $this->to
-            ])
+                'to' => $this->to,
+            ]),
         ]);
     }
 }
