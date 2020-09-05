@@ -2,8 +2,8 @@
 
 namespace Laraveles\Traits;
 
-use Laraveles\Models\Rating;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laraveles\Models\Rating;
 
 trait CanBeRated
 {
