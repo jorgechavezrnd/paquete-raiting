@@ -11,10 +11,10 @@ class Rating extends Pivot
     protected $table = 'ratings';
     protected $guarded = [];
     protected $casts = [
-        'rating' => 'float'
+        'rating' => 'float',
     ];
     protected $dates = [
-        'approved_at'
+        'approved_at',
     ];
 
     public function rateable()
