@@ -2,9 +2,9 @@
 
 return [
     'models' => [
-        'rating' => \App\Rating::class
+        'rating' => \Laraveles\Rating\Models\Rating::class
     ],
+    'required_approval' => true,
     'from' => 1,
-    'to' => 10,
-    'required_approval' => true
+    'to' => 5
 ];

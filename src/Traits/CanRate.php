@@ -1,17 +1,24 @@
 <?php
 
-namespace Laraveles\Traits;
+namespace Laraveles\Rating\Traits;
 
 use Illuminate\Database\Eloquent\Model;
-use Laraveles\Events\ModelRated;
-use Laraveles\Events\ModelUnrated;
-use Laraveles\Exceptions\InvalidScore;
+use Illuminate\Support\Carbon;
+use Laraveles\Rating\Contracts\Rateable;
+use Laraveles\Rating\Events\ModelRated;
+use Laraveles\Rating\Events\ModelUnrated;
+use Laraveles\Rating\Exception\InvalidScore;
 
 trait CanRate
 {
-    public function ratings($model = null)
+    /**
+     * @param Model|null $model
+     * @param bool $approved
+     * @return mixed
+     */
+    public function ratings($model = null, bool $approved = false)
     {
-        $modelClass = $model ? $model : $this->getMorphClass();
+        $modelClass = $model ? (new $model)->getMorphClass() : $this->getMorphClass();
 
         $morphToMany = $this->morphToMany(
             $modelClass,
@@ -21,17 +28,28 @@ trait CanRate
             'rateable_id'
         );
 
+        if ($approved) {
+            $morphToMany->wherePivot('approved_at', '<>', null);
+        }
+
         $morphToMany
             ->as('rating')
             ->withTimestamps()
-            ->withPivot('score', 'rateable_type')
+            ->withPivot('rateable_type', 'score', 'approved_at')
             ->wherePivot('rateable_type', $modelClass)
             ->wherePivot('qualifier_type', $this->getMorphClass());
 
         return $morphToMany;
     }
 
-    public function rate(Model $model, float $score): bool
+    /**
+     * @param Rateable $model
+     * @param float $score
+     * @param string|null $comments
+     * @return bool
+     * @throws \Exception
+     */
+    public function rate(Rateable $model, float $score, string $comments = null): bool
     {
         if ($this->hasRated($model)) {
             return false;
@@ -41,11 +59,13 @@ trait CanRate
         $to = config('rating.to');
 
         if ($score < $from || $score > $to) {
-            throw new InvalidScore($from, $to);
+            throw new InvalidScore();
         }
 
         $this->ratings($model)->attach($model->getKey(), [
             'score' => $score,
+            'comments' => $comments,
+            'approved_at' => config('rating.required_approval', false) ? null : Carbon::now(),
             'rateable_type' => get_class($model),
         ]);
 
@@ -54,7 +74,11 @@ trait CanRate
         return true;
     }
 
-    public function unrate(Model $model): bool
+    /**
+     * @param Rateable|Model $model
+     * @return bool
+     */
+    public function unrate(Rateable $model): bool
     {
         if (! $this->hasRated($model)) {
             return false;
@@ -67,8 +91,29 @@ trait CanRate
         return true;
     }
 
-    public function hasRated(Model $model): bool
+    /**
+     * @param Rateable|Model $model
+     * @return bool
+     */
+    public function hasRated(Rateable $model): bool
     {
         return ! is_null($this->ratings($model->getMorphClass())->find($model->getKey()));
+    }
+
+    /**
+     * @param Rateable|Model $model
+     * @param float $newRating
+     * @return bool
+     * @throws \Exception
+     */
+    public function updateRatingFor(Rateable $model, float $newRating): bool
+    {
+        if (! $this->hasRated($model)) {
+            return $this->rate($model, $newRating);
+        }
+
+        $this->ratings($model->getMorphClass())->detach($model->getKey());
+
+        return $this->rate($model, $newRating);
     }
 }

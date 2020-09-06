@@ -1,35 +1,35 @@
 <?php
 
-namespace Laraveles\Events;
+namespace Laraveles\Rating\Events;
 
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Laraveles\Rating\Contracts\Qualifier;
+use Laraveles\Rating\Contracts\Rateable;
 
 class ModelRated
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, SerializesModels;
 
-    /** @var Model */
-    private Model $qualifier;
-    /** @var Model */
-    private Model $rateable;
+    /** @var Qualifier */
+    private Qualifier $qualifier;
+    /** @var Rateable */
+    private Rateable $rateable;
     private float $score;
 
-    public function __construct(Model $qualifier, Model $rateable, float $score)
+    public function __construct(Qualifier $qualifier, Rateable $rateable, float $score)
     {
         $this->qualifier = $qualifier;
         $this->rateable = $rateable;
         $this->score = $score;
     }
 
-    public function getQualifier(): Model
+    public function getQualifier(): Qualifier
     {
         return $this->qualifier;
     }
 
-    public function getRateable(): Model
+    public function getRateable(): Rateable
     {
         return $this->rateable;
     }

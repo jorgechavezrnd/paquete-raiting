@@ -6,37 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateRatingsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('ratings', function (Blueprint $table) {
-            $table->id();
-            $table->float('score');
+            $table->increments('id');
 
-            $table->morphs('rateable');
-            // This line has the same result as:
-            // $table->unsignedBigInteger('rateable_id');
-            // $table->string('rateable_type');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('rateable_id');
+            $table->string('rateable_type');
 
-            $table->morphs('qualifier');
-            // This line has the same result as:
-            // $table->unsignedBigInteger('qualifier_id');
-            // $table->string('qualifier_type');
+            $table->integer('qualifier_id')->nullable();
+            $table->string('qualifier_type')->nullable();
+
+            $table->float('score', 9, 2);
+            $table->text('comments')->nullable();
+            $table->string('cause')->nullable();
+
+            $table->date('approved_at')->nullable();
 
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('ratings');
     }

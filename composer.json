@@ -1,17 +1,29 @@
 {
-    "name": "jccr/rating",
-    "description": ":package_description",
+    "name": "jorgechavezrnd/rating",
+    "description": "Laravel Eloquent Rating allows you to assign ratings to any model.",
     "keywords": [
-        ":vendor_name",
-        ":package_name"
+        "eloquent",
+        "laravel",
+        "model",
+        "rating",
+        "rate",
+        "stars",
+        "star",
+        "system"
     ],
-    "homepage": "https://github.com/:vendor_name/:package_name",
+    "homepage": "https://github.com/jorgechavezrnd/rating",
     "license": "MIT",
     "authors": [
         {
-            "name": "Jorge",
-            "email": "jorgechavezrnd@gmail.com",
-            "homepage": "https://spatie.be",
+            "name": "Alex Renoki",
+            "email": "rennokki@gmail.com",
+            "homepage": "https://twitter.com/rennokki",
+            "role": "Developer"
+        },
+        {
+            "name": "Sergio Ojeda",
+            "email": "soj3da@gmail.com",
+            "homepage": "https://twitter.com/soj3da",
             "role": "Developer"
         }
     ],
@@ -27,37 +39,32 @@
         "friendsofphp/php-cs-fixer": "^2.16",
         "symfony/var-dumper": "^5.0",
         "orchestra/testbench": "^5.0",
-        "phpunit/phpunit": "^9.3"
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\Skeleton\\": "src"
+            "Laraveles\\Rating\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\Skeleton\\Tests\\": "tests"
+            "Laraveles\\Rating\\Test\\": "tests"
         }
     },
     "scripts": {
-        "psalm": "vendor/bin/psalm",
         "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "test-coverage": "vendor/bin/phpunit --coverage-clover=coverage.xml",
         "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
-    },
-    "config": {
-        "sort-packages": true
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Spatie\\Skeleton\\SkeletonServiceProvider"
-            ],
-            "aliases": {
-                "Skeleton": "Spatie\\Skeleton\\SkeletonFacade"
-            }
+                "Laraveles\\Rating\\RatingServiceProvider"
+            ]
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev"
 }
